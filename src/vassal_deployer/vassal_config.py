@@ -124,7 +124,7 @@ class VassalConfig(dict):
     @property
     def uwsgi_port(self):
         """uwsgi port, linked to nginx"""
-        return self.uwsgi_socket.split(':', 1)[1]
+        return int(self.uwsgi_socket.split(':', 1)[1])
 
     @property
     def section(self):
@@ -139,12 +139,12 @@ class VassalConfig(dict):
     @property
     def app_python(self):
         """app python interpreter"""
-        return self.section.get('python')
+        return self.section.get('python', 'python')
 
     @property
     def app_requirements(self):
         """app requirements to install"""
-        return self.section.get('requirements')
+        return self.section.get('requirements', '')
 
     @property
     def pip_options(self):

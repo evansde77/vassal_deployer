@@ -4,3 +4,4 @@ pep8
 pyflakes
 pylint
 nose
+mock
