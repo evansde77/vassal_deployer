@@ -79,7 +79,7 @@ class VassalConfig(dict):
         content = "[uwsgi]\n"
         values = dict(self['uwsgi'])
         values.update(settings)
-        content += '\n'.join("{}={}".format(k, v) for k, v in values.iteritems())
+        content += '\n'.join("{}={}".format(k, v) for k, v in iter(values.items()))
         return content
 
     def nginx_config(self):
