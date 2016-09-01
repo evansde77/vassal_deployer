@@ -1,0 +1,6 @@
+tox
+coverage
+pep8
+pyflakes
+pylint
+nose
