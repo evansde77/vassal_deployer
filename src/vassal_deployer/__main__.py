@@ -70,6 +70,6 @@ def main():
         opts.sites_enabled
         )
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()
 

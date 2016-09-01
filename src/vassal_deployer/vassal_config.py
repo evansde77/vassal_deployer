@@ -41,7 +41,7 @@ import subprocess
 
 try:
     import ConfigParser as configparser
-except ImportError:
+except ImportError:  # pragma: no cover
     import configparser
 
 
