@@ -43,6 +43,8 @@ In the above option, a uwsgi vassal is defined listening on 3030 with a basic py
 3. Render the vassal configuration (without the extra vassaldeployer section) 
 4. Build an nginx site configuration that maps the uwsgi socket to an nginx site, with the URL /some_package on the nginx server proxying requests to the uwsgi vassal on the backend. 
 
+If multiple vassal templates are present, they will all be grouped into the same nginx site definition being routed to different url endpoints. 
+
 
 ## CLI Usage 
 
