@@ -7,6 +7,7 @@ uwsgi vassal configurations
 
 """
 import os
+from . import logger
 
 
 class NginxSite(object):
@@ -72,6 +73,7 @@ class NginxSite(object):
         write the nginx config to the sites available directory
         """
         avail_file = os.path.join(self.sites_available, self._conf_file)
+        logger.info("writing sites available: {}".format(avail_file))
         with open(avail_file, 'w') as handle:
             handle.write(self.configuration())
 
@@ -81,4 +83,5 @@ class NginxSite(object):
         """
         avail_file = os.path.join(self.sites_available, self._conf_file)
         enabled_file = os.path.join(self.sites_enabled, self._conf_file)
+        logger.info("linking {} to {}".format(avail_file, enabled_file))
         os.system("ln -sf {} {}".format(avail_file, enabled_file))

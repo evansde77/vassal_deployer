@@ -36,7 +36,8 @@ listening on the specified socket
 
 """
 import os
-import subprocess
+from virtualenvapi.manage import VirtualEnvironment
+from . import logger
 
 
 try:
@@ -149,39 +150,37 @@ class VassalConfig(dict):
     @property
     def pip_options(self):
         """extra options to pass to pip install"""
-        return self.section.get('pip_options', '')
+        return [x.strip() for x in self.section.get('pip_options', '').split() if x.strip()]
 
     def make_virtualenv(self):
         """
         execute the virtualenv command using the appropriate python
         """
-        cmd = [
-            "virtualenv", "-p",
-            "{}".format(self.app_python),
-            self.uwsgi_virtualenv
-        ]
-        subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        logger.info("Making venv: {}".format(self.uwsgi_virtualenv))
+        if not os.path.exists(self.uwsgi_home):
+            os.makedirs(self.uwsgi_home)
+        env = VirtualEnvironment(self.uwsgi_virtualenv, python=self.app_python)
+        env.open_or_create()
 
     def pip_install(self):
         """
         pip install the requirements list
         """
-        reqs = ' '.join([
+        reqs = [
             x.strip()
-            for x in self.app_requirements.split(',') if x.strip
-            ]
-        )
+            for x in self.app_requirements.split(',') if x.strip()
+        ]
         if not reqs:
             # no reqs specified
             return
-        cmd = (
-            " . {}/bin/activate && "
-            "pip install {} {}"
-        ).format(self.uwsgi_virtualenv, self.pip_options, reqs)
-        subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        env = VirtualEnvironment(self.uwsgi_virtualenv)
+        for req in reqs:
+            logger.info("installing {} in {}".format(req, self.uwsgi_virtualenv))
+            env.install(req, options=self.pip_options)
 
     def write(self, dirname):
         """write config for vassal into the vassals dir"""
         f = os.path.join(dirname, self.basename)
+        logger.info("writing vassal config: {}".format(f))
         with open(f, 'w') as handle:
             handle.write(self.uwsgi_config())

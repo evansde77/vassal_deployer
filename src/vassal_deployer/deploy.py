@@ -6,6 +6,7 @@ deploy
 import os
 from .vassal_config import VassalConfig
 from .nginx_config import NginxSite
+from . import logger
 
 
 def list_vassals_configs(directory):
@@ -36,6 +37,7 @@ def make_vassals(directory):
     """
     vassals = []
     for vc in list_vassals_configs(directory):
+        logger.info('found vassal config: {}'.format(vc))
         vassals.append(VassalConfig(vc))
     return vassals
 
